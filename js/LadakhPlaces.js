@@ -165,17 +165,6 @@ var LadakhPlaces = [
     "Description":"When in Ladakh, you must most definitely plan up a visit to the fascinating Druk White Lotus School, also famously but un-officially Amir Khan’s school in the popular Hindi movie, The 3 Idiots. The school is a brilliant initiative to educate children in their rich cultural traditions while also equipping them with the faculties to face life in the 21st century. The school spreads across a large landscape and is wholly sustained on solar energy. The architectural plan is one to be marveled at. The school was damaged in the August 2010 floods, but has now been restored."
   },
   {
-    "Name":"Chowkhang Gompa",
-    "Alternate":"",
-    "Primary Type of Activity":"",
-    "Secondary Type of Activity":"",
-    "Image":"http://images.travbuddy.com/1344848_12188909516340.jpg",
-    "Lat":null,
-    "Long":null,
-    "Source":"http://www.thebetterindia.com/5658/tbi-travel-100-things-to-do-in-ladakh/",
-    "Description":"Want an easy outlet for peace and some quiet amidst the busy hustle of the Ladakh streets? Seek solace in the Chowkhang Gompa, situated right at the busy street centre or the Town Centre. The Chowkhang Gompa is hardly visible, but a roving eye and a discerning traveler should follow the main bazaar right till the back and there hidden in the large courtyard behind the main bazaar is the Chowkhang Gompa. It has an unmistakable gilt-roofed prayer room which is delightfully hemmed with hundreds of prayer flags. The Chowkhang Gompa is also the headquarters of the Buddhist Association for Tibet."
-  },
-  {
     "Name":"Diskit Gompa",
     "Alternate":"",
     "Primary Type of Activity":"",
