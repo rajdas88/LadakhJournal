@@ -1,4 +1,4 @@
-document.getElementById("map").style.height = window.innerHeight-10 + "px";
+document.getElementById("map").style.height = window.innerHeight-15 + "px";
 
 var map = L.map('map').setView([34, 77], 8);
 
@@ -19,11 +19,21 @@ var LeafIcon = L.Icon.extend({
 var blueIcon = new LeafIcon({iconUrl: 'images/marker-icon-blue.png'}),
 	redIcon = new LeafIcon({iconUrl: 'images/marker-icon-red.png'});
 
-var link
+var link;
+
 for (var i = 0; i < LadakhPlaces.length; i++) {
-	if (LadakhPlaces[i].Lat != "" & i == 1) {
-		link = $("<a href='#'>" + LadakhPlaces[i].Name + "</a>").click(function() {
-			Lightview.show('image.jpg');
+	if (LadakhPlaces[i].Lat != "") {
+		link = "<a href='#' class='speciallink'>" + LadakhPlaces[i].Name + "</a>"
+		link = $("<a href='#'>" + LadakhPlaces[i].Name + "</a>").on('click', {name: LadakhPlaces[i].Name, desc: LadakhPlaces[i].Description, image: LadakhPlaces[i].Image}, function(event) {
+			//var caption = LadakhPlaces[i].Name;
+			Lightview.show({
+				url: event.data.image,
+				title: event.data.name,
+				caption: event.data.desc,
+				options: {
+					width: 600
+				}
+				});
 		})[0];
 		L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon}).addTo(map).bindPopup(link);
 		//L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon}).addTo(map).bindPopup("<b>" + LadakhPlaces[i].Name + "</b> <br>" + LadakhPlaces[i].Description);
@@ -32,7 +42,6 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 	}
 }
 
-				
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
