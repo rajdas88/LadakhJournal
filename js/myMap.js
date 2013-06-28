@@ -11,9 +11,9 @@ L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/
 var LeafIcon = L.Icon.extend({
 	options: {
 	shadowUrl: 'images/marker-shadow.png',
-	iconAnchor:   [12, 20], // changed 41 to 20 for label placement
-	shadowAnchor: [12, 20], // same as above 
-	popupAnchor:  [0, -34]
+	iconAnchor:   [12, 20],
+	shadowAnchor: [12, 20],
+	popupAnchor:  [0, -20]
 	}
 });
 		
@@ -44,9 +44,10 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 			});
 	});
 	addFlag = $.inArray(i, myList) > 0 ? "Remove" : "Add"
-	tpdiv = $("<a href='#'>" + "Add/Remove" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i}, function(event) {
+	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i}, function(event) {
 		if (!(event.data.number in myList)) {
 		
+			/*
 			var scheduleItem = L.control();
 
 			scheduleItem.onAdd = function (map) {
@@ -62,6 +63,28 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 
 			map.addControl(scheduleItem);
 			myList[event.data.number] = scheduleItem;
+			*/
+			var scheduleItem = '<li><div class="item cat' + (event.data.number%2) + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
+			//var scheduleItem = '<li id="element4">event.data.name</li>'
+			
+			myList[event.data.number] = scheduleItem;
+			
+			/*var ul = document.getElementById("elements");
+			var newLI = document.createElement("li");
+			ul.appendChild(newLI);
+			newLI.innerHTML = '<li id="element_4">YAAA <b class="delete_element">x</b></li>';
+			console.log(newLI.parent);*/
+			
+			jQuery(document).ready(function($) {
+				$("ul").append(scheduleItem);
+				$("#delete_element_" + event.data.number).click(function() {
+					$(this).parent().remove();
+					//map.removeControl(myList[event.data.number]);
+					delete myList[event.data.number]
+				});
+			});
+			
+			Sortable.create("elements");
 			//itemList.push(scheduleItem);
 			
 			//refresh marker add -> remove
@@ -71,8 +94,8 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 			//markerList[i] = new_marker;
 			//map.addLayer(markerList[i]);
 		} else {
-			map.removeControl(myList[event.data.number]);
-			delete myList[event.data.number];
+			//map.removeControl(myList[event.data.number]);
+			//delete myList[event.data.number];
 		}		
 	})[0];
 	div = $('<div />').append(link).append("<br>").append(tpdiv)[0];
@@ -151,3 +174,6 @@ document.getElementById("category1").onclick = function() {
 		map.removeLayer(cat2[i]);
 	}
 }
+
+// END CATEGORY LOGIC
+

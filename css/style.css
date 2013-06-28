@@ -11,10 +11,26 @@
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
-    background: rgba(255,255,255,0.8);
+    background: rgba(200,200,200,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
 	width: 200px;
+	position: relative;
+	margin-bottom: 10px;
+}
+
+.cat0 {
+	background: rgba(0,0,230,0.3);
+}
+
+.cat1 {
+	background: rgba(230,0,0,0.3);
+}
+
+.item img {
+	position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 .legend {
@@ -26,4 +42,18 @@
     height: 41px;
     float: left;
     margin-right: 8px;
+}
+
+ul{
+	position: absolute;
+	top: 10px;
+	right: 40px;
+	z-index: 1;
+	width: 200px;
+	list-style-type: none;
+}
+
+li { 
+	cursor: hand; 
+	cursor: pointer; 
 }

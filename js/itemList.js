@@ -1,0 +1,6 @@
+// Scripataculous Sortables testing
+
+	Sortable.create("elements");
+
+
+//
