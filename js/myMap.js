@@ -47,34 +47,10 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i}, function(event) {
 		if (!(event.data.number in myList)) {
 		
-			/*
-			var scheduleItem = L.control();
-
-			scheduleItem.onAdd = function (map) {
-				this._div = L.DomUtil.create('div', 'item'); // create a div with a class "item"
-				this.update();
-				return this._div;
-			};
-
-			// method that we will use to update the control based on feature properties passed
-			scheduleItem.update = function (props) {
-				this._div.innerHTML = event.data.name;
-			};
-
-			map.addControl(scheduleItem);
-			myList[event.data.number] = scheduleItem;
-			*/
 			var scheduleItem = '<li><div class="item cat' + (event.data.number%2) + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
-			//var scheduleItem = '<li id="element4">event.data.name</li>'
 			
 			myList[event.data.number] = scheduleItem;
-			
-			/*var ul = document.getElementById("elements");
-			var newLI = document.createElement("li");
-			ul.appendChild(newLI);
-			newLI.innerHTML = '<li id="element_4">YAAA <b class="delete_element">x</b></li>';
-			console.log(newLI.parent);*/
-			
+
 			jQuery(document).ready(function($) {
 				$("ul").append(scheduleItem);
 				$("#delete_element_" + event.data.number).click(function() {

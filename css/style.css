@@ -20,11 +20,11 @@
 }
 
 .cat0 {
-	background: rgba(0,0,230,0.3);
+	background: rgba(0,0,255,0.4);
 }
 
 .cat1 {
-	background: rgba(230,0,0,0.3);
+	background: rgba(255,0,0,0.4);
 }
 
 .item img {
