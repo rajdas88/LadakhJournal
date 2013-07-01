@@ -47,7 +47,7 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i}, function(event) {
 		if (!(event.data.number in myList)) {
 		
-			var scheduleItem = '<li><div class="item cat' + (event.data.number%2) + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
+			var scheduleItem = '<li><div onclick="markerList[' + event.data.number + '].openPopup();" class="item cat' + (event.data.number%2) + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
 			
 			myList[event.data.number] = scheduleItem;
 
