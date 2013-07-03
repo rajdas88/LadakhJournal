@@ -1,4 +1,4 @@
-document.getElementById("map").style.height = window.innerHeight-15 + "px";
+document.getElementById("map").style.height = window.innerHeight-16 + "px";
 
 var map = L.map('map').setView([34, 77], 8);
 
@@ -10,25 +10,24 @@ L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/
 //Change name from leaficon
 var LeafIcon = L.Icon.extend({
 	options: {
-	shadowUrl: 'images/marker-shadow.png',
-	iconAnchor:   [12, 20],
-	shadowAnchor: [12, 20],
-	popupAnchor:  [0, -20]
+	iconAnchor:   [24, 48],
+	popupAnchor:  [0, -48]
 	}
 });
 		
-var blueIcon = new LeafIcon({iconUrl: 'images/marker-icon-blue.png'}),
-	redIcon = new LeafIcon({iconUrl: 'images/marker-icon-red.png'});
 
-// Generalize for more than 2 categories
+var icons = [new LeafIcon({iconUrl: 'images/categories/Spiritual.png'}),
+			new LeafIcon({iconUrl: 'images/categories/DailyLife.png'}),
+			new LeafIcon({iconUrl: 'images/categories/Historical.png'}),
+			new LeafIcon({iconUrl: 'images/categories/Nature.png'})];
+
+
 var link, tpdiv, div;
-var cat1 = [];
-var cat2 = [];
+var categories = ["Spiritual", "Daily Life", "Historical", "Nature"];
 var marker;
-var markerList = {};
-var myList = {};
-var addFlag;
-//alert($.inArray(4, myList));
+var markerList = {}; // list of marker objects
+var myList = {}; // "itiniterary" list of boxes that appear on right
+//var addFlag;
 // Consider using leaflet labels instead of popup?
 //https://github.com/Leaflet/Leaflet.label
 for (var i = 0; i < LadakhPlaces.length; i++) {
@@ -43,11 +42,10 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 			}
 			});
 	});
-	addFlag = $.inArray(i, myList) > 0 ? "Remove" : "Add"
-	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i}, function(event) {
+	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i, category: categories.indexOf(LadakhPlaces[i].Category1)}, function(event) {
 		if (!(event.data.number in myList)) {
 		
-			var scheduleItem = '<li><div onclick="markerList[' + event.data.number + '].openPopup();" class="item cat' + (event.data.number%2) + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
+			var scheduleItem = '<li><div onclick="markerList[' + event.data.number + '].openPopup();" class="item cat' + event.data.category + '">' + event.data.name + '<img src="./images/close.png" id="delete_element_' + event.data.number + '" height="10" width="10"></div></li>'
 			
 			myList[event.data.number] = scheduleItem;
 
@@ -75,81 +73,45 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 		}		
 	})[0];
 	div = $('<div />').append(link).append("<br>").append(tpdiv)[0];
-	if (LadakhPlaces[i].Lat != "" && i%2 == 0) {
-		marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon, opacity: 0.8, riseOnHover: true}).bindPopup(div);
-		//.bindLabel('Look revealing label!').addTo(map);
-		/*marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon, opacity: 0.8, riseOnHover: true}).
-		on('click', function() {
-			Lightview.show({
-				url: this.image,
-				title: this.name,
-				caption: this.desc,
-				options: {
-					width: 600
-				}
-			});
-		}, {name: LadakhPlaces[i].Name, desc: LadakhPlaces[i].Description, image: LadakhPlaces[i].Image}).
-		bindLabel(LadakhPlaces[i].Name);*/
-		
-		//marker.on('dblclick', function() {
-		//alert('dbl');}
-		cat1.push(marker);
+	
+	
+	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).bindPopup(div);
 		markerList[i] = marker;
 		map.addLayer(marker);
-		//L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon}).addTo(map).bindPopup(link);
-	} else {
-		marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: redIcon, opacity: 0.8, riseOnHover: true}).bindPopup(div);
-		cat2.push(marker);
-		markerList[i] = marker;
-		map.addLayer(marker);
-	}
+	
 }
 
 var legend = L.control({position: 'bottomleft'});
 
 legend.onAdd = function (map) {
 
-	var div = L.DomUtil.create('div', 'info legend'),
-		grades = ["Lived", "Visited"],
-		labels = [];
-
-	div.innerHTML +=
-		'<div style="display: inline;" id="category1"><i style="background: url(images/marker-icon-blue.png)"></i>Lived</div><br />' +
-		'<div style="display: inline;" id="category2"><i style="background: url(images/marker-icon-red.png)"></i>Visited</div><br />' +
-		'<b id="allcategory">ALL</b>';
+	var div = L.DomUtil.create('div', 'info legend');
+	
+	for (var i = 0; i < categories.length; i++) {
+		div.innerHTML += '<div style="display: inline;" id="category_' + i + '"><i style="width: 48px; height: 37px; background: url(images/categories/' + categories[i].replace(" ", "") + '.png)"></i>' + categories[i] + '</div><br />'
+	}
+		
+	div.innerHTML += '<div style="display: inline;" id="category_all"><i style="width: 48px; height: 37px; background: url(images/categories/All.png)"></i>All</div>';
 
     return div;
 	};
 
 legend.addTo(map);
 
-// obviously change logic below
-document.getElementById("allcategory").onclick = function() {
-	for (var i = 0; i < cat2.length; i++) {
-		map.addLayer(cat2[i]);
-	}
-	for (var i = 0; i < cat1.length; i++) {
-		map.addLayer(cat1[i]);
-	}
-}
-
-document.getElementById("category2").onclick = function() {
-	for (var i = 0; i < cat2.length; i++) {
-		map.addLayer(cat2[i]);
-	}
-	for (var i = 0; i < cat1.length; i++) {
-		map.removeLayer(cat1[i]);
+for (var i = 0; i < categories.length; i++) {
+	document.getElementById("category_" + i).onclick = function() {
+		for (var j = 0; j < LadakhPlaces.length; j++) {
+			if (Number(this.id.charAt(this.id.length-1)) == categories.indexOf(LadakhPlaces[j].Category1)) {
+				map.addLayer(markerList[j]);
+			} else {
+				map.removeLayer(markerList[j]);
+			}
+		}
 	}
 }
 
-document.getElementById("category1").onclick = function() {
-	for (var i = 0; i < cat1.length; i++) {
-		map.addLayer(cat1[i]);
-	}
-	for (var i = 0; i < cat2.length; i++) {
-		map.removeLayer(cat2[i]);
+document.getElementById("category_all").onclick = function() {
+	for (var j = 0; j < LadakhPlaces.length; j++) {
+		map.addLayer(markerList[j]);
 	}
 }
-
-// END CATEGORY LOGIC
-
