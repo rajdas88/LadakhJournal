@@ -30,11 +30,25 @@
 <link rel="stylesheet" type="text/css" href="./css/lightview/lightview.css"/>
 <link rel="stylesheet" type="text/css" href="./css/leaflet.label.css" />
 	<script src="./js/leaflet.label.js"></script>
+	<script src="./js/spin.min.js"></script>
 	
 
 
 </head>
-<body class="">
+	<a href="#" onclick="loadModal()">CLICK TEST</a>
+	<div id="overlay">
+	<div id="modal-holder">
+		<div class="modal-control modal-minus" onclick="overlay()"></div>
+		<div class="modal-control modal-plus"></div>
+		<br>
+		<div id="modal-image-holder">
+			<img id="modal-image">
+		</div>
+		<div id="modal-title">a</div>
+		<div id="modal-text">b</div>
+		</div>
+	</div>
+	</div>
 
 	<ul id="elements">
 	</ul>
