@@ -20,6 +20,7 @@
 	<script type="text/JavaScript" src="./js/LadakhPlaces.js"></script>
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	<!--[if lt IE 9]>
 	<script type="text/javascript" src="/js/excanvas/excanvas.js"></script>
@@ -38,13 +39,13 @@
 	<div id="overlay">
 	<div id="modal-holder">
 		<div class="modal-control modal-minus" onclick="closeModal()"></div>
-		<div class="modal-control modal-plus"></div>
+		<div class="modal-control modal-plus" onclick="addItem()"></div>
 		<br>
 		<div id="modal-image-holder">
 			<img id="modal-image">
 		</div>
-		<div id="modal-title">a</div>
-		<div id="modal-text">b</div>
+		<div id="modal-title"></div>
+		<div id="modal-text"></div>
 		</div>
 	</div>
 	</div>

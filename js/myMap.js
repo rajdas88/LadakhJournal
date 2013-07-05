@@ -11,7 +11,8 @@ L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/
 var LeafIcon = L.Icon.extend({
 	options: {
 	iconAnchor:   [24, 48],
-	popupAnchor:  [0, -48]
+	popupAnchor:  [0, -48],
+	labelAnchor:  [12, -30]
 	}
 });
 		
@@ -27,22 +28,15 @@ var categories = ["Spiritual", "Daily Life", "Historical", "Nature"];
 var marker;
 var markerList = {}; // list of marker objects
 var myList = {}; // "itiniterary" list of boxes that appear on right
+var globalIndex;
 //var addFlag;
 // Consider using leaflet labels instead of popup?
 //https://github.com/Leaflet/Leaflet.label
 for (var i = 0; i < LadakhPlaces.length; i++) {
 	//link = "<a href='#' class='speciallink'>" + LadakhPlaces[i].Name + "</a>"
-	link = $("<a href='#'>" + LadakhPlaces[i].Name + "</a>").on('click', {name: LadakhPlaces[i].Name, desc: LadakhPlaces[i].Description, image: LadakhPlaces[i].Image}, function(event) {
+	/*link = $("<a href='#'>" + LadakhPlaces[i].Name + "</a>").on('click', {name: LadakhPlaces[i].Name, desc: LadakhPlaces[i].Description, image: LadakhPlaces[i].Image}, function(event) {
 		preloadImage(event.data.image, event.data.name, event.data.desc, showModal, loadModal);
 		
-		/*Lightview.show({
-			url: event.data.image,
-			title: event.data.name,
-			caption: event.data.desc,
-			options: {
-				width: 600
-			}
-			});*/
 	});
 	tpdiv = $("<a href='#'>" + "Add" + "</a>").on('click', {name: LadakhPlaces[i].Name, number: i, category: categories.indexOf(LadakhPlaces[i].Category1)}, function(event) {
 		if (!(event.data.number in myList)) {
@@ -75,12 +69,17 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 		}		
 	})[0];
 	div = $('<div />').append(link).append("<br>").append(tpdiv)[0];
+	*/
+	//marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).bindPopup(div);
+	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).
+		on('click', function(event) {
+			globalIndex = this.index;
+			preloadImage(LadakhPlaces[this.index].Image, LadakhPlaces[this.index].Name, LadakhPlaces[this.index].Description, showModal, loadModal);
+		}, {index: i}).
+		bindLabel(LadakhPlaces[i].Name);
 	
-	
-	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).bindPopup(div);
 	markerList[i] = marker;
 	map.addLayer(marker);
-	
 }
 
 var legend = L.control({position: 'bottomleft'});
@@ -118,11 +117,58 @@ document.getElementById("category_all").onclick = function() {
 	}
 }
 
-// This is nwo used to close modal
+// This is used to close modal
 function closeModal() {
 	document.getElementById("overlay").style.visibility = "hidden";
+	setItemsOpacity(0.2);
 }
 
+function showItem() {
+	console.log("Click Event needed");
+}
+
+function setItemsOpacity(n) {
+	jQuery(document).ready(function($) {
+		$(".cat0").css({ 'background': 'rgba(255,255,0,' + n + ')' });
+		$(".cat1").css({ 'background': 'rgba(255,0,0,' + n + ')' });
+		$(".cat2").css({ 'background': 'rgba(0,0,255,' + n + ')' });
+		$(".cat3").css({ 'background': 'rgba(0,255,0,' + n + ')' });
+	});
+}
+
+function addItem() {
+	if (!(globalIndex in myList)) {
+		
+			var scheduleItem = '<li><div onclick="showItem();" id="listItem' + globalIndex + '" class="item cat' + categories.indexOf(LadakhPlaces[globalIndex].Category1) + '">' + LadakhPlaces[globalIndex].Name + '<img src="./images/close.png" id="delete_element_' + globalIndex + '" height="10" width="10"></div></li>'
+						
+			myList[globalIndex] = scheduleItem;
+
+			jQuery(document).ready(function($) {
+				$("ul").append(scheduleItem);
+				$("#delete_element_" + globalIndex).click(function() {
+					$(this).parent().remove();
+					//map.removeControl(myList[event.data.number]);
+					delete myList[globalIndex]
+				});
+			});
+			
+			Sortable.create("elements");
+			//itemList.push(scheduleItem);
+			
+			//refresh marker add -> remove
+			//map.removeLayer(markerList[i]);
+			//delete markerList[i];
+			//var new_marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon, opacity: 0.8, riseOnHover: true}).bindPopup(div);
+			//markerList[i] = new_marker;
+			//map.addLayer(markerList[i]);
+		} else {
+			//Already exists!
+			jQuery(document).ready(function($) {
+				$( "#listItem" + globalIndex ).effect( "shake" );
+			});
+		}
+		setItemsOpacity(0.8);
+}
 
 var opts = {color: '#fff',
 	top: '80px',
@@ -132,6 +178,7 @@ var spinner = new Spinner(opts); //.spin(document.getElementById("modal-image-ho
 
 function showModal(image, title, text, loadingFlag) {
 	spinner.stop();
+	setItemsOpacity(0.8);
 	el = document.getElementById("overlay");
 	if (!loadingFlag) {
 		el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
@@ -144,6 +191,7 @@ function showModal(image, title, text, loadingFlag) {
 }
 
 function loadModal() {
+	setItemsOpacity(0.8);
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 	document.getElementById("modal-holder").style.left = (window.innerWidth-600) / 2 + "px";
@@ -154,7 +202,6 @@ function loadModal() {
 	document.getElementById("modal-image").style.visibility = 'hidden';
 	document.getElementById("modal-title").innerHTML = "";
 	document.getElementById("modal-text").innerHTML = "";
-	console.log("spin buddy!");
 	spinner.spin(document.getElementById("modal-image-holder"));
 
 	//var spinner = new Spinner(opts).spin();
@@ -174,18 +221,16 @@ function preloadImage(image, title, text, callback, spinnerCallback){
 	}, (3 * 1000));
 	*/
   var objImagePreloader = new Image();
-	console.log("loading...");
+
   objImagePreloader.src = image;
   if(objImagePreloader.complete){
     callback(image, title, text, false);
     objImagePreloader.onload=function(){};
-	console.log("COMPLETE");
+
   }
   else{
 	spinnerCallback();
-	console.log("spinner called?");
     objImagePreloader.onload = function() {
-		console.log("onload here");
       callback(image, title, text, true);
       //    clear onLoad, IE behaves irratically with animated gifs otherwise
       objImagePreloader.onload=function(){};
