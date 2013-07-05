@@ -33,7 +33,7 @@ var myList = {}; // "itiniterary" list of boxes that appear on right
 for (var i = 0; i < LadakhPlaces.length; i++) {
 	//link = "<a href='#' class='speciallink'>" + LadakhPlaces[i].Name + "</a>"
 	link = $("<a href='#'>" + LadakhPlaces[i].Name + "</a>").on('click', {name: LadakhPlaces[i].Name, desc: LadakhPlaces[i].Description, image: LadakhPlaces[i].Image}, function(event) {
-		preloadImage(event.data.image, event.data.name, event.data.desc, showModal);
+		preloadImage(event.data.image, event.data.name, event.data.desc, showModal, loadModal);
 		
 		/*Lightview.show({
 			url: event.data.image,
@@ -78,8 +78,8 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 	
 	
 	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).bindPopup(div);
-		markerList[i] = marker;
-		map.addLayer(marker);
+	markerList[i] = marker;
+	map.addLayer(marker);
 	
 }
 
@@ -119,16 +119,26 @@ document.getElementById("category_all").onclick = function() {
 }
 
 // This is nwo used to close modal
-function overlay() {
-	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+function closeModal() {
+	document.getElementById("overlay").style.visibility = "hidden";
 }
 
-function showModal(image, title, text) {
+
+var opts = {color: '#fff',
+	top: '80px',
+	left: '280px'
+};
+var spinner = new Spinner(opts); //.spin(document.getElementById("modal-image-holder"));
+
+function showModal(image, title, text, loadingFlag) {
+	spinner.stop();
 	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+	if (!loadingFlag) {
+		el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+	}
 	document.getElementById("modal-holder").style.left = (window.innerWidth-600) / 2 + "px";
 	document.getElementById("modal-image").src = image;
+	document.getElementById("modal-image").style.visibility = 'inherit';
 	document.getElementById("modal-title").innerHTML = title;
 	document.getElementById("modal-text").innerHTML = text;
 }
@@ -137,22 +147,22 @@ function loadModal() {
 	el = document.getElementById("overlay");
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 	document.getElementById("modal-holder").style.left = (window.innerWidth-600) / 2 + "px";
-	target = document.getElementById("modal-image");
-	target.src = "";
-	target.style.backgroundColor = "grey";
-	target.style.height = "200px";
-	target = document.getElementById("modal-image-holder");
-	
-	var opts = {top: '100px',
-		left: '50px'
-	};
-	var spinner = new Spinner(opts).spin(target);
+	//target = document.getElementById("modal-image");
+	//target.src = "";
+	//target.style.backgroundColor = "black";
+	//target.style.height = "200px";
+	document.getElementById("modal-image").style.visibility = 'hidden';
+	document.getElementById("modal-title").innerHTML = "";
+	document.getElementById("modal-text").innerHTML = "";
+	console.log("spin buddy!");
+	spinner.spin(document.getElementById("modal-image-holder"));
+
 	//var spinner = new Spinner(opts).spin();
 	//target.appendChild(spinner.el);
 }
 
 // http://stackoverflow.com/questions/51352/how-to-show-a-spinner-while-loading-an-image-via-javascript
-function preloadImage(image, title, text, callback){
+function preloadImage(image, title, text, callback, spinnerCallback){
 	/*
 	callback("", title, text);
 	target = document.getElementById("modal-image");
@@ -167,12 +177,16 @@ function preloadImage(image, title, text, callback){
 	console.log("loading...");
   objImagePreloader.src = image;
   if(objImagePreloader.complete){
-    callback(image, title, text);
+    callback(image, title, text, false);
     objImagePreloader.onload=function(){};
+	console.log("COMPLETE");
   }
   else{
+	spinnerCallback();
+	console.log("spinner called?");
     objImagePreloader.onload = function() {
-      callback(image, title, text);
+		console.log("onload here");
+      callback(image, title, text, true);
       //    clear onLoad, IE behaves irratically with animated gifs otherwise
       objImagePreloader.onload=function(){};
     }
