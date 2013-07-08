@@ -71,7 +71,7 @@ for (var i = 0; i < LadakhPlaces.length; i++) {
 	div = $('<div />').append(link).append("<br>").append(tpdiv)[0];
 	*/
 	//marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).bindPopup(div);
-	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).
+	marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {id: "123Test", icon: icons[categories.indexOf(LadakhPlaces[i].Category1)], opacity: 0.8, riseOnHover: true}).
 		on('click', function(event) {
 			globalIndex = this.index;
 			preloadImage(LadakhPlaces[this.index].Image, LadakhPlaces[this.index].Name, LadakhPlaces[this.index].Description, showModal, loadModal);
@@ -119,12 +119,18 @@ document.getElementById("category_all").onclick = function() {
 
 // This is used to close modal
 function closeModal() {
-	document.getElementById("overlay").style.visibility = "hidden";
-	setItemsOpacity(0.2);
+	console.log(event.target.id);
+	if (event.target.id == "overlay") {
+		document.getElementById("overlay").style.visibility = "hidden";
+		setItemsOpacity(0.2);
+	}
 }
 
-function showItem() {
-	console.log("Click Event needed");
+function showItem(index) {
+	// Would highly prefer doing this by some ID instead of by nth child which may "break" easily
+	jQuery(document).ready(function($) {
+		$(".leaflet-marker-pane > img:nth-child(" + index +")" ).effect( "bounce", {times: 1, distance: 50} );
+	});
 }
 
 function setItemsOpacity(n) {
@@ -137,9 +143,12 @@ function setItemsOpacity(n) {
 }
 
 function addItem() {
+	//Wrong LOGIC - globalIndex changes with new modals...
+	// We want the addItem to have an ID input and all this work should be done on the ID
+	// I think ultiamtely get rid of globalIndex
 	if (!(globalIndex in myList)) {
 		
-			var scheduleItem = '<li><div onclick="showItem();" id="listItem' + globalIndex + '" class="item cat' + categories.indexOf(LadakhPlaces[globalIndex].Category1) + '">' + LadakhPlaces[globalIndex].Name + '<img src="./images/close.png" id="delete_element_' + globalIndex + '" height="10" width="10"></div></li>'
+			var scheduleItem = '<li><div onclick="showItem(' + (globalIndex+1) + ');" id="listItem' + globalIndex + '" class="item cat' + categories.indexOf(LadakhPlaces[globalIndex].Category1) + '">' + LadakhPlaces[globalIndex].Name + '<img src="./images/close.png" id="delete_element_' + globalIndex + '" height="10" width="10"></div></li>'
 						
 			myList[globalIndex] = scheduleItem;
 
@@ -147,20 +156,13 @@ function addItem() {
 				$("ul").append(scheduleItem);
 				$("#delete_element_" + globalIndex).click(function() {
 					$(this).parent().remove();
-					//map.removeControl(myList[event.data.number]);
-					delete myList[globalIndex]
+					// For below, see comments near function declaration
+					delete myList[this.id.split("_")[2]]
 				});
 			});
 			
 			Sortable.create("elements");
-			//itemList.push(scheduleItem);
-			
-			//refresh marker add -> remove
-			//map.removeLayer(markerList[i]);
-			//delete markerList[i];
-			//var new_marker = L.marker([LadakhPlaces[i].Lat, LadakhPlaces[i].Long], {icon: blueIcon, opacity: 0.8, riseOnHover: true}).bindPopup(div);
-			//markerList[i] = new_marker;
-			//map.addLayer(markerList[i]);
+
 		} else {
 			//Already exists!
 			jQuery(document).ready(function($) {

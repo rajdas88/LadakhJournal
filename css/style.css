@@ -1,8 +1,11 @@
-/*body {font-family: 10px Futura, Arial, sans-serif;}*/
+* {
+	font-family: futura, arial, helvetica, sans-serif;
+	font-size: 14px;
+}
 
 .info {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
+    /*font: 14px/16px Arial, Helvetica, sans-serif;*/
     background: white;
     background: rgba(255,255,255,0.9);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -11,7 +14,7 @@
 
 .item {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
+    /*font: 14px/16px Arial, Helvetica, sans-serif;*/
     background: white;
     background: rgba(200,200,200,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
